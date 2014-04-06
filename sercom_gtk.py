@@ -22,7 +22,44 @@ class MyWindow(Gtk.Window):
         button.add(image)
         hb.pack_end(button)
 
-        self.add(Gtk.TextView())
+        button2 = Gtk.Button("Send")
+
+
+
+        stack = Gtk.Stack()
+        stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        stack.set_transition_duration(1000)
+
+        self.entry = Gtk.Entry()
+        self.entry.set_text("Enter ASCII Text")
+        stack.add_titled(self.entry, "entryA","ASCII")
+
+        self.entry2 = Gtk.Entry()
+        self.entry2.set_text("Enter HEX String")
+        stack.add_titled(self.entry2, "entryH", "HEX")
+
+        stack_switcher = Gtk.StackSwitcher()
+        stack_switcher.set_stack(stack)
+
+        self.vbox = Gtk.VBox(0,1)
+        self.add(self.vbox)
+
+        hbox = Gtk.HBox(0,1)
+        tv = Gtk.TextView()
+        stbr = Gtk.Statusbar()
+        self.vbox.pack_start(tv,1,1,0)
+        self.vbox.pack_start(hbox,0,0,0)
+        self.vbox.pack_start(stbr,0,0,0)
+
+        hbox.pack_start(stack_switcher,1,1,0)
+        hbox.pack_start(stack,1,1,0)
+        hbox.pack_start(button2,0,0,0)
+
+
+
+
+
+
 
 win = MyWindow()
 win.connect("delete-event", Gtk.main_quit)
