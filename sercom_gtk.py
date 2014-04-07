@@ -9,7 +9,7 @@ class MyWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self,title="Sercom_Gtk")
         self.set_border_width(0)
-        self.set_default_size(400,200)
+        self.set_default_size(500,200)
 
         hb = Gtk.HeaderBar()
         hb.props.show_close_button = True
@@ -23,12 +23,15 @@ class MyWindow(Gtk.Window):
         hb.pack_end(button)
 
         button2 = Gtk.Button("Send")
+        button3 = Gtk.Button("Clear")
 
-
+        baud_label = Gtk.Label("baud")
+        port_label = Gtk.Label("port")
 
         stack = Gtk.Stack()
-        stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-        stack.set_transition_duration(1000)
+        stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+        stack.set_transition_duration(500)
+        stack.set_hexpand(True)
 
         self.entry = Gtk.Entry()
         self.entry.set_text("Enter ASCII Text")
@@ -45,20 +48,22 @@ class MyWindow(Gtk.Window):
         self.add(self.vbox)
 
         hbox = Gtk.HBox(0,1)
+        hbox2 = Gtk.HBox(0,1)
         tv = Gtk.TextView()
-        stbr = Gtk.Statusbar()
+
         self.vbox.pack_start(tv,1,1,0)
+
+        self.vbox.pack_start(hbox2,0,0,0)
         self.vbox.pack_start(hbox,0,0,0)
-        self.vbox.pack_start(stbr,0,0,0)
+
+        hbox2.pack_start(stack,1,1,0)
 
         hbox.pack_start(stack_switcher,1,1,0)
-        hbox.pack_start(stack,1,1,0)
+        hbox.pack_start(baud_label,1,1,0)
+        hbox.pack_start(port_label,1,1,0)
+
+        hbox.pack_start(button3,0,0,10)
         hbox.pack_start(button2,0,0,0)
-
-
-
-
-
 
 
 win = MyWindow()
