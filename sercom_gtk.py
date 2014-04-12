@@ -9,7 +9,7 @@ class MyWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self,title="Sercom_Gtk")
         self.set_border_width(0)
-        self.set_default_size(500,200)
+        self.set_default_size(500,400)
 
         hb = Gtk.HeaderBar()
         hb.props.show_close_button = True
@@ -20,10 +20,13 @@ class MyWindow(Gtk.Window):
         icon = Gio.ThemedIcon(name="emblem-system-symbolic")
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
         button.add(image)
+        button.connect("clicked", self.on_click_settings)
         hb.pack_end(button)
 
         button2 = Gtk.Button("Send")
+        button2.connect("clicked", self.on_click_send)
         button3 = Gtk.Button("Clear")
+        button3.connect("clicked", self.on_click_clear)
 
         baud_label = Gtk.Label("baud")
         port_label = Gtk.Label("port")
@@ -34,10 +37,12 @@ class MyWindow(Gtk.Window):
         stack.set_hexpand(True)
 
         self.entry = Gtk.Entry()
+        self.entry.connect("changed", self.on_ascii_change)
         self.entry.set_text("Enter ASCII Text")
         stack.add_titled(self.entry, "entryA","ASCII")
 
         self.entry2 = Gtk.Entry()
+        self.entry2.connect("changed", self.on_hex_change)
         self.entry2.set_text("Enter HEX String")
         stack.add_titled(self.entry2, "entryH", "HEX")
 
@@ -52,18 +57,25 @@ class MyWindow(Gtk.Window):
         tv = Gtk.TextView()
 
         self.vbox.pack_start(tv,1,1,0)
-
         self.vbox.pack_start(hbox2,0,0,0)
         self.vbox.pack_start(hbox,0,0,0)
-
         hbox2.pack_start(stack,1,1,0)
-
         hbox.pack_start(stack_switcher,1,1,0)
         hbox.pack_start(baud_label,1,1,0)
         hbox.pack_start(port_label,1,1,0)
-
         hbox.pack_start(button3,0,0,10)
         hbox.pack_start(button2,0,0,0)
+
+    def on_click_settings(self, button):
+        print("Settings Button Clicked")
+    def on_click_send(self, button):
+        print("Send Button Clicked")
+    def on_click_clear(self, button):
+        print("Clear Button Clicked")
+    def on_ascii_change(self, entry):
+        print("ASCII Change")
+    def on_hex_change(self, entry):
+        print("Hex Change")
 
 
 win = MyWindow()
