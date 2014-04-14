@@ -39,23 +39,8 @@ class MyWindow(Gtk.Window):
         button4.connect("toggled", self.on_button_toggled, 4)
         button5.connect("toggled", self.on_button_toggled, 5)
 
-        stack = Gtk.Stack()
-        stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-        stack.set_transition_duration(500)
-        stack.set_hexpand(True)
-
         self.entry = Gtk.Entry()
         self.entry.connect("changed", self.on_entry_change)
-        #self.entry.set_text("Enter ASCII Text")
-        #stack.add_titled(self.entry, "entryA","ASCII")
-
-        #self.entry2 = Gtk.Entry()
-        #self.entry2.connect("changed", self.on_hex_change)
-        #self.entry2.set_text("Enter HEX String")
-        #stack.add_titled(self.entry2, "entryH", "HEX")
-
-        #stack_switcher = Gtk.StackSwitcher()
-        #stack_switcher.set_stack(stack)
 
         self.vbox = Gtk.VBox(0,1)
         self.add(self.vbox)
@@ -67,9 +52,9 @@ class MyWindow(Gtk.Window):
         self.vbox.pack_start(tv,1,1,0)
         self.vbox.pack_start(hbox2,0,0,0)
         self.vbox.pack_start(hbox,0,0,1)
-        #hbox2.pack_start(stack,1,1,0)
+
         hbox2.pack_start(self.entry,1,1,0)
-        #hbox.pack_start(stack_switcher,1,1,0)
+
         hbox.pack_start(button4,0,0,0)
         hbox.pack_start(button5,0,0,0)
         hbox.pack_start(baud_label,1,1,0)
@@ -85,8 +70,7 @@ class MyWindow(Gtk.Window):
         print("Clear Button Clicked")
     def on_entry_change(self, entry):
         print("Text Entry Change")
-    def on_hex_change(self, entry):
-        print("Hex Change")
+
     def on_button_toggled(self, button, name):
         if (name == 4):
             if (button.get_active() == 1):
