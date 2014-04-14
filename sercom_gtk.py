@@ -36,8 +36,8 @@ class MyWindow(Gtk.Window):
         button5 = Gtk.RadioButton.new_from_widget(button4)
         button4.set_label("ASCII")
         button5.set_label("HEX")
-        button4.connect("toggled", self.on_button_toggled, "1")
-        button5.connect("toggled", self.on_button_toggled, "2")
+        button4.connect("toggled", self.on_button_toggled, 4)
+        button5.connect("toggled", self.on_button_toggled, 5)
 
         stack = Gtk.Stack()
         stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
@@ -88,11 +88,17 @@ class MyWindow(Gtk.Window):
     def on_hex_change(self, entry):
         print("Hex Change")
     def on_button_toggled(self, button, name):
-        if button.get_active():
-            state="on"
+        if (name == 4):
+            if (button.get_active() == 1):
+                print("ASCII Mode")
+        elif (name == 5):
+            if (button.get_active() == 1):
+                print("HEX Mode")
         else:
-            state="off"
-        print("Button", name, "was turned", state)
+            print("ERROR: This mode should not be selectable")
+            print(name)
+            print(button.get_active())
+
 
 
 win = MyWindow()
