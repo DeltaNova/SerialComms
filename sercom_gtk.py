@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk,Gio
+from gi.repository import Gtk, Gio
 
 class MyWindow(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self,title="Sercom_Gtk")
+        Gtk.Window.__init__(self, title="Sercom_Gtk")
         self.set_border_width(0)
-        self.set_default_size(500,400)
+        self.set_default_size(500, 400)
 
         hb = Gtk.HeaderBar()
         hb.props.show_close_button = True
@@ -55,25 +55,25 @@ class MyWindow(Gtk.Window):
         self.entry = Gtk.Entry()
         self.entry.connect("changed", self.on_entry_change)
 
-        self.vbox = Gtk.VBox(0,1)
+        self.vbox = Gtk.VBox(0, 1)
         self.add(self.vbox)
 
-        hbox = Gtk.HBox(0,1)
-        hbox2 = Gtk.HBox(0,1)
+        hbox = Gtk.HBox(0, 1)
+        hbox2 = Gtk.HBox(0, 1)
         tv = Gtk.TextView()
 
-        self.vbox.pack_start(tv,1,1,0)
-        self.vbox.pack_start(hbox2,0,0,0)
-        self.vbox.pack_start(hbox,0,0,1)
+        self.vbox.pack_start(tv, 1, 1, 0)
+        self.vbox.pack_start(hbox2, 0, 0, 0)
+        self.vbox.pack_start(hbox, 0, 0, 1)
 
-        hbox2.pack_start(self.entry,1,1,0)
+        hbox2.pack_start(self.entry, 1, 1, 0)
 
-        hbox.pack_start(button4,0,0,0)
-        hbox.pack_start(button5,0,0,0)
-        hbox.pack_start(baud_label,1,1,0)
-        hbox.pack_start(port_label,1,1,0)
-        hbox.pack_start(button3,0,0,10)
-        hbox.pack_start(button2,0,0,0)
+        hbox.pack_start(button4, 0, 0, 0)
+        hbox.pack_start(button5, 0, 0, 0)
+        hbox.pack_start(baud_label, 1, 1, 0)
+        hbox.pack_start(port_label, 1, 1, 0)
+        hbox.pack_start(button3, 0, 0, 10)
+        hbox.pack_start(button2, 0, 0, 0)
 
     def on_click_settings(self, button):
         print("Settings Button Clicked")
