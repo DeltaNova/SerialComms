@@ -17,6 +17,7 @@
 """
 from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango
+import re
 
 class MyWindow(Gtk.Window):
     """Application Window"""
@@ -25,6 +26,8 @@ class MyWindow(Gtk.Window):
         self.set_border_width(0)
         self.set_default_size(500, 400)
         self.textmode = 1 #Default to ASCII
+
+        self.hex_regex = re.compile(r'[a-fA-F0-9]',re.I | re.S)
 
         self.header()
         self.button2, self.button3, self.button4, self.button5 = self.buttons()
@@ -164,12 +167,48 @@ class MyWindow(Gtk.Window):
         - Check for valid HEX or ASCII Chars
         """
         #TODO - Validate Entered Text
+        #self.textmode indicates HEX/ASCII to validate
+        if self.textmode == 1:
+            # ASCII Mode
+            self.validate_ascii()
+        elif self.textmode == 0:
+            # Hex Mode
+            self.validate_hex()
+        else:
+            print("Invalid Mode Selected")
+
+
+
         #DEBUG - TextEntry Change
         print("Text Entry Change")
 
+    def validate_ascii(self):
+        """
+        Check to see if text is valid ASCII
+        """
+        print("Validating ASCII")
+
+    def validate_hex(self):
+        """
+        Check to see if text is valid HEX
+        """
+        print("Validating HEX")
+        valid = 0 #Set to 1 for invalid text
+        text = self.entry.get_text()
+        for t in text:
+            if bool(self.hex_regex.match(t)):
+                print( t + " is valid")
+            else:
+                print( t + " is invalid")
+                valid = 1
+
+        if valid == 1:
+            #TODO - Set Entry BG colour to red
+            #TDOD - Disable Send Button
+            pass
+
 
 if __name__ == "__main__":
-
     WIN = MyWindow()
     WIN.connect("delete-event", Gtk.main_quit)
     WIN.show_all()
