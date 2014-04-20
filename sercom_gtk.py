@@ -24,6 +24,7 @@ class MyWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Sercom_Gtk")
         self.set_border_width(0)
         self.set_default_size(500, 400)
+        self.textmode = 1 #Default to ASCII
 
         self.header()
         self.button2, self.button3, self.button4, self.button5 = self.buttons()
@@ -33,7 +34,7 @@ class MyWindow(Gtk.Window):
 
         self.entry = Gtk.Entry()
         #DEBUG - self.entry_change
-        #self.entry.connect("changed", self.on_entry_change)
+        self.entry.connect("changed", self.on_entry_change)
 
         hbox = Gtk.HBox(0, 1)
         hbox.pack_start(self.button4, 0, 0, 0)
@@ -54,6 +55,13 @@ class MyWindow(Gtk.Window):
         self.vbox.pack_start(self.scrolledwindow, 1, 1, 0)
         self.vbox.pack_start(hbox2, 0, 0, 0)
         self.vbox.pack_start(hbox, 0, 0, 1)
+    def textmode(self,value):
+        """
+        Text Entry Mode
+        0 = HEX
+        1 = ASCII
+        """
+        self.textmode = value
 
     def buttons(self):
         """Create Window Buttons"""
@@ -119,7 +127,8 @@ class MyWindow(Gtk.Window):
         #DEBUG - Clear Button Clicked
         print("Clear Button Clicked " + str(button))
 
-    def on_textview_change(self, entry, *args):
+
+    def on_textview_change(self,*args):
         """
         Processes Changes in the TextEntry Box
         Scrolls the window vertically
@@ -127,24 +136,41 @@ class MyWindow(Gtk.Window):
         adj = self.scrolledwindow.get_vadjustment()
         adj.set_value(adj.get_upper() - adj.get_page_size())
         #DEBUG - TextEntry Change
-        print("Text Entry Change " + str(entry))
+        #print(args)
+        print("TextView Change ")
 
     def on_button_toggled(self, button, name):
         """Indicates Text Entry Type"""
         if name == 4:
             if button.get_active() == 1:
                 print("ASCII Mode")
+                self.textmode = 1
+                #DEBUG - Print textmode
+                print(self.textmode)
         elif name == 5:
             if button.get_active() == 1:
                 print("HEX Mode")
+                self.textmode = 0
+                #DEBUG - Print textmode
+                print(self.textmode)
         else:
             print("ERROR: This mode should not be selectable")
             print(name)
             print(button.get_active())
 
+    def on_entry_change(self,entry):
+        """
+        Process Changes In Entry Field
+        - Check for valid HEX or ASCII Chars
+        """
+        #TODO - Validate Entered Text
+        #DEBUG - TextEntry Change
+        print("Text Entry Change")
 
 
-WIN = MyWindow()
-WIN.connect("delete-event", Gtk.main_quit)
-WIN.show_all()
-Gtk.main()
+if __name__ == "__main__":
+
+    WIN = MyWindow()
+    WIN.connect("delete-event", Gtk.main_quit)
+    WIN.show_all()
+    Gtk.main()
