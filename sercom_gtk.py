@@ -94,7 +94,7 @@ class MyWindow(Gtk.Window):
     def set_textview(self):
         """Setup the textview area"""
         textview = Gtk.TextView()
-        textview.connect("size-allocate", self.on_entry_change)
+        textview.connect("size-allocate", self.on_textview_change)
         textview.set_wrap_mode(1)
         fontdesc = Pango.FontDescription("monospace")
         textview.modify_font(fontdesc)
@@ -119,7 +119,7 @@ class MyWindow(Gtk.Window):
         #DEBUG - Clear Button Clicked
         print("Clear Button Clicked " + str(button))
 
-    def on_entry_change(self, entry, *args):
+    def on_textview_change(self, entry, *args):
         """
         Processes Changes in the TextEntry Box
         Scrolls the window vertically
