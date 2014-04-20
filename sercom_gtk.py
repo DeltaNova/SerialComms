@@ -16,25 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from __future__ import print_function
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, Pango
 
 class MyWindow(Gtk.Window):
+    """Application Window"""
     def __init__(self):
         Gtk.Window.__init__(self, title="Sercom_Gtk")
         self.set_border_width(0)
         self.set_default_size(500, 400)
 
-        hb = Gtk.HeaderBar()
-        hb.props.show_close_button = True
-        hb.props.title = "Sercom_Gtk"
-        self.set_titlebar(hb)
+        headerbar = Gtk.HeaderBar()
+        headerbar.props.show_close_button = True
+        headerbar.props.title = "Sercom_Gtk"
+        self.set_titlebar(headerbar)
 
         button = Gtk.Button()
         icon = Gio.ThemedIcon(name="emblem-system-symbolic")
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
         button.add(image)
         button.connect("clicked", self.on_click_settings)
-        hb.pack_end(button)
+        headerbar.pack_end(button)
 
         button2 = Gtk.Button("Send")
         button2.connect("clicked", self.on_click_send)
@@ -60,9 +61,10 @@ class MyWindow(Gtk.Window):
 
         hbox = Gtk.HBox(0, 1)
         hbox2 = Gtk.HBox(0, 1)
-        tv = Gtk.TextView()
 
-        self.vbox.pack_start(tv, 1, 1, 0)
+        textview = self.textview()
+
+        self.vbox.pack_start(textview, 1, 1, 0)
         self.vbox.pack_start(hbox2, 0, 0, 0)
         self.vbox.pack_start(hbox, 0, 0, 1)
 
@@ -75,21 +77,40 @@ class MyWindow(Gtk.Window):
         hbox.pack_start(button3, 0, 0, 10)
         hbox.pack_start(button2, 0, 0, 0)
 
+    def textview(self):
+        """Setup the textview area"""
+        textview = Gtk.TextView()
+        fontdesc = Pango.FontDescription("monospace")
+        textview.modify_font(fontdesc)
+        return textview
+
     def on_click_settings(self, button):
-        print("Settings Button Clicked")
+        """Access Settings Options"""
+        print("Settings Button Clicked " + str(button))
+
     def on_click_send(self, button):
-        print("Send Button Clicked")
+        """Send TextEntry Contents by toggled type"""
+        print("Send Button Clicked " + str(button))
+
     def on_click_clear(self, button):
-        print("Clear Button Clicked")
+        """Clears Contents of TextEntry"""
+        self.entry.set_text("")
+        print("Clear Button Clicked " + str(button))
+
     def on_entry_change(self, entry):
-        print("Text Entry Change")
+        """Process Changes in the TextEntry Box"""
+        self.textbuffer = self.textview.get_buffer()
+        self.textbuffer.get_insert()
+        self.textbuffer.insert("Change Text ")
+        print("Text Entry Change " + str(entry))
 
     def on_button_toggled(self, button, name):
-        if (name == 4):
-            if (button.get_active() == 1):
+        """Indicates Text Entry Type"""
+        if name == 4:
+            if button.get_active() == 1:
                 print("ASCII Mode")
-        elif (name == 5):
-            if (button.get_active() == 1):
+        elif name == 5:
+            if button.get_active() == 1:
                 print("HEX Mode")
         else:
             print("ERROR: This mode should not be selectable")
@@ -98,7 +119,7 @@ class MyWindow(Gtk.Window):
 
 
 
-win = MyWindow()
-win.connect("delete-event", Gtk.main_quit)
-win.show_all()
+WIN = MyWindow()
+WIN.connect("delete-event", Gtk.main_quit)
+WIN.show_all()
 Gtk.main()
