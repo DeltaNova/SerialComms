@@ -47,7 +47,7 @@ class MyWindow(Gtk.Window):
         hbox2.pack_start(self.entry, 1, 1, 0)
 
         self.textview = self.set_textview()
-        self.scroll_window()
+        self.scrolledwindow = self.scroll_window()
         self.scrolledwindow.add(self.textview)
         self.vbox = Gtk.VBox(0, 1)
         self.add(self.vbox)
@@ -86,10 +86,10 @@ class MyWindow(Gtk.Window):
 
     def scroll_window(self):
         """Create ScrolledWindow"""
-        self.scrolledwindow = Gtk.ScrolledWindow()
-        self.scrolledwindow.set_hexpand(True)
-        self.scrolledwindow.set_vexpand(True)
-        return self.scrolledwindow
+        scrolledwindow = Gtk.ScrolledWindow()
+        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_vexpand(True)
+        return scrolledwindow
 
     def set_textview(self):
         """Setup the textview area"""
