@@ -26,7 +26,7 @@ class MyWindow(Gtk.Window):
         self.set_default_size(500, 400)
 
         self.header()
-        self.buttons()
+        self.button2, self.button3, self.button4, self.button5 = self.buttons()
 
         baud_label = Gtk.Label("baud")
         port_label = Gtk.Label("port")
@@ -57,17 +57,17 @@ class MyWindow(Gtk.Window):
 
     def buttons(self):
         """Create Window Buttons"""
-        self.button2 = Gtk.Button("Send")
-        self.button2.connect("clicked", self.on_click_send)
-        self.button3 = Gtk.Button("Clear")
-        self.button3.connect("clicked", self.on_click_clear)
-        self.button4 = Gtk.RadioButton.new_from_widget(None)
-        self.button5 = Gtk.RadioButton.new_from_widget(self.button4)
-        self.button4.set_label("ASCII")
-        self.button5.set_label("HEX")
-        self.button4.connect("toggled", self.on_button_toggled, 4)
-        self.button5.connect("toggled", self.on_button_toggled, 5)
-        return self.button2, self.button3, self.button4, self.button5
+        button2 = Gtk.Button("Send")
+        button2.connect("clicked", self.on_click_send)
+        button3 = Gtk.Button("Clear")
+        button3.connect("clicked", self.on_click_clear)
+        button4 = Gtk.RadioButton.new_from_widget(None)
+        button5 = Gtk.RadioButton.new_from_widget(button4)
+        button4.set_label("ASCII")
+        button5.set_label("HEX")
+        button4.connect("toggled", self.on_button_toggled, 4)
+        button5.connect("toggled", self.on_button_toggled, 5)
+        return button2, button3, button4, button5
 
     def header(self):
         """Setup the header bar"""
