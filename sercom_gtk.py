@@ -32,7 +32,8 @@ class MyWindow(Gtk.Window):
         port_label = Gtk.Label("port")
 
         self.entry = Gtk.Entry()
-        self.entry.connect("changed", self.on_entry_change)
+        #DEBUG - self.entry_change
+        #self.entry.connect("changed", self.on_entry_change)
 
         hbox = Gtk.HBox(0, 1)
         hbox.pack_start(self.button4, 0, 0, 0)
@@ -107,16 +108,14 @@ class MyWindow(Gtk.Window):
         textbuffer.get_insert()
         entry_text = self.entry.get_text()
         textbuffer.insert_at_cursor(entry_text)
+        #DEBUG - Send Button Clicked
         print("Send Button Clicked " + str(button))
 
     def on_click_clear(self, button):
         """Clears Contents of TextEntry"""
         self.entry.set_text("")
-        #DEBUG
+        #DEBUG - Clear Button Clicked
         print("Clear Button Clicked " + str(button))
-
-
-
 
     def on_entry_change(self, entry, *args):
         """
@@ -125,7 +124,7 @@ class MyWindow(Gtk.Window):
         """
         adj = self.scrolledwindow.get_vadjustment()
         adj.set_value(adj.get_upper() - adj.get_page_size())
-        #DEBUG
+        #DEBUG - TextEntry Change
         print("Text Entry Change " + str(entry))
 
     def on_button_toggled(self, button, name):
