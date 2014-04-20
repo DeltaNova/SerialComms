@@ -25,6 +25,50 @@ class MyWindow(Gtk.Window):
         self.set_border_width(0)
         self.set_default_size(500, 400)
 
+        self.header()
+        self.buttons()
+
+        baud_label = Gtk.Label("baud")
+        port_label = Gtk.Label("port")
+
+        self.entry = Gtk.Entry()
+        self.entry.connect("changed", self.on_entry_change)
+
+        hbox = Gtk.HBox(0, 1)
+        hbox.pack_start(self.button4, 0, 0, 0)
+        hbox.pack_start(self.button5, 0, 0, 0)
+        hbox.pack_start(baud_label, 1, 1, 0)
+        hbox.pack_start(port_label, 1, 1, 0)
+        hbox.pack_start(self.button3, 0, 0, 10)
+        hbox.pack_start(self.button2, 0, 0, 0)
+
+        hbox2 = Gtk.HBox(0, 1)
+        hbox2.pack_start(self.entry, 1, 1, 0)
+
+        self.textview = self.set_textview()
+        self.scroll_window()
+        self.scrolledwindow.add(self.textview)
+        self.vbox = Gtk.VBox(0, 1)
+        self.add(self.vbox)
+        self.vbox.pack_start(self.scrolledwindow, 1, 1, 0)
+        self.vbox.pack_start(hbox2, 0, 0, 0)
+        self.vbox.pack_start(hbox, 0, 0, 1)
+
+    def buttons(self):
+        self.button2 = Gtk.Button("Send")
+        self.button2.connect("clicked", self.on_click_send)
+        self.button3 = Gtk.Button("Clear")
+        self.button3.connect("clicked", self.on_click_clear)
+        self.button4 = Gtk.RadioButton.new_from_widget(None)
+        self.button5 = Gtk.RadioButton.new_from_widget(self.button4)
+        self.button4.set_label("ASCII")
+        self.button5.set_label("HEX")
+        self.button4.connect("toggled", self.on_button_toggled, 4)
+        self.button5.connect("toggled", self.on_button_toggled, 5)
+        return self.button2, self.button3, self.button4, self.button5
+
+    def header(self):
+        """Setup the header bar"""
         headerbar = Gtk.HeaderBar()
         headerbar.props.show_close_button = True
         headerbar.props.title = "Sercom_Gtk"
@@ -36,50 +80,19 @@ class MyWindow(Gtk.Window):
         button.add(image)
         button.connect("clicked", self.on_click_settings)
         headerbar.pack_end(button)
+        return headerbar
 
-        button2 = Gtk.Button("Send")
-        button2.connect("clicked", self.on_click_send)
-        button3 = Gtk.Button("Clear")
-        button3.connect("clicked", self.on_click_clear)
+    def scroll_window(self):
+        self.scrolledwindow = Gtk.ScrolledWindow()
+        self.scrolledwindow.set_hexpand(True)
+        self.scrolledwindow.set_vexpand(True)
+        return self.scrolledwindow
 
-        baud_label = Gtk.Label("baud")
-        port_label = Gtk.Label("port")
-
-
-        button4 = Gtk.RadioButton.new_from_widget(None)
-        button5 = Gtk.RadioButton.new_from_widget(button4)
-        button4.set_label("ASCII")
-        button5.set_label("HEX")
-        button4.connect("toggled", self.on_button_toggled, 4)
-        button5.connect("toggled", self.on_button_toggled, 5)
-
-        self.entry = Gtk.Entry()
-        self.entry.connect("changed", self.on_entry_change)
-
-        self.vbox = Gtk.VBox(0, 1)
-        self.add(self.vbox)
-
-        hbox = Gtk.HBox(0, 1)
-        hbox2 = Gtk.HBox(0, 1)
-
-        textview = self.textview()
-
-        self.vbox.pack_start(textview, 1, 1, 0)
-        self.vbox.pack_start(hbox2, 0, 0, 0)
-        self.vbox.pack_start(hbox, 0, 0, 1)
-
-        hbox2.pack_start(self.entry, 1, 1, 0)
-
-        hbox.pack_start(button4, 0, 0, 0)
-        hbox.pack_start(button5, 0, 0, 0)
-        hbox.pack_start(baud_label, 1, 1, 0)
-        hbox.pack_start(port_label, 1, 1, 0)
-        hbox.pack_start(button3, 0, 0, 10)
-        hbox.pack_start(button2, 0, 0, 0)
-
-    def textview(self):
+    def set_textview(self):
         """Setup the textview area"""
         textview = Gtk.TextView()
+        textview.connect("size-allocate", self.on_entry_change)
+        textview.set_wrap_mode(1)
         fontdesc = Pango.FontDescription("monospace")
         textview.modify_font(fontdesc)
         return textview
@@ -90,18 +103,29 @@ class MyWindow(Gtk.Window):
 
     def on_click_send(self, button):
         """Send TextEntry Contents by toggled type"""
+        textbuffer = self.textview.get_buffer()
+        textbuffer.get_insert()
+        entry_text = self.entry.get_text()
+        textbuffer.insert_at_cursor(entry_text)
         print("Send Button Clicked " + str(button))
 
     def on_click_clear(self, button):
         """Clears Contents of TextEntry"""
         self.entry.set_text("")
+        #DEBUG
         print("Clear Button Clicked " + str(button))
 
-    def on_entry_change(self, entry):
-        """Process Changes in the TextEntry Box"""
-        self.textbuffer = self.textview.get_buffer()
-        self.textbuffer.get_insert()
-        self.textbuffer.insert("Change Text ")
+
+
+
+    def on_entry_change(self, entry, *args):
+        """
+        Processes Changes in the TextEntry Box
+        Scrolls the window vertically
+        """
+        adj = self.scrolledwindow.get_vadjustment()
+        adj.set_value(adj.get_upper() - adj.get_page_size())
+        #DEBUG
         print("Text Entry Change " + str(entry))
 
     def on_button_toggled(self, button, name):
