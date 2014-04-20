@@ -56,6 +56,7 @@ class MyWindow(Gtk.Window):
         self.vbox.pack_start(hbox, 0, 0, 1)
 
     def buttons(self):
+        """Create Window Buttons"""
         self.button2 = Gtk.Button("Send")
         self.button2.connect("clicked", self.on_click_send)
         self.button3 = Gtk.Button("Clear")
@@ -84,6 +85,7 @@ class MyWindow(Gtk.Window):
         return headerbar
 
     def scroll_window(self):
+        """Create ScrolledWindow"""
         self.scrolledwindow = Gtk.ScrolledWindow()
         self.scrolledwindow.set_hexpand(True)
         self.scrolledwindow.set_vexpand(True)
