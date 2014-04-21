@@ -62,15 +62,9 @@ class MyWindow(Gtk.Window):
 
         style_provider = Gtk.CssProvider()
         css = """
-        #MyWindow {
-            background-color: blue;
-        }
-        #InvalidEntry {
-            background-color: red;
-        }
-
-        #ValidEntry {
-            background-color: white;
+        GtkEntry.invalid {
+            color: white;
+            background: red;
         }
         """
         style_provider.load_from_data(css)
@@ -191,11 +185,9 @@ class MyWindow(Gtk.Window):
             self.validate_ascii()
         elif self.textmode == 0:
             # Hex Mode
-            self.validate_hex()
+            self.validate_hex(entry)
         else:
             print("Invalid Mode Selected")
-
-
 
         #DEBUG - TextEntry Change
         print("Text Entry Change")
@@ -206,12 +198,15 @@ class MyWindow(Gtk.Window):
         """
         print("Validating ASCII")
 
-    def validate_hex(self):
+    def validate_hex(self, entry):
         """
         Check to see if text is valid HEX
         """
         print("Validating HEX")
         valid = 0 #Set to 1 for invalid text
+        ctx = entry.get_style_context()
+        ctx.remove_class('invalid')
+
         text = self.entry.get_text()
         for t in text:
             if bool(self.hex_regex.match(t)):
@@ -221,7 +216,8 @@ class MyWindow(Gtk.Window):
                 valid = 1
 
         if valid == 1:
-            #TODO - Set Entry BG colour to red
+            ctx.add_class('invalid')
+
             #TDOD - Disable Send Button
             pass
 
