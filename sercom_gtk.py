@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from __future__ import print_function
-from gi.repository import Gtk, Gio, Pango
+from gi.repository import Gtk, Gio, Pango, Gdk
 import re
 
 class MyWindow(Gtk.Window):
@@ -58,6 +58,24 @@ class MyWindow(Gtk.Window):
         self.vbox.pack_start(self.scrolledwindow, 1, 1, 0)
         self.vbox.pack_start(hbox2, 0, 0, 0)
         self.vbox.pack_start(hbox, 0, 0, 1)
+
+
+        style_provider = Gtk.CssProvider()
+        css = """
+        #MyWindow {
+            background-color: blue;
+        }
+        #InvalidEntry {
+            background-color: red;
+        }
+
+        #ValidEntry {
+            background-color: white;
+        }
+        """
+        style_provider.load_from_data(css)
+        Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
     def textmode(self,value):
         """
         Text Entry Mode
@@ -210,6 +228,7 @@ class MyWindow(Gtk.Window):
 
 if __name__ == "__main__":
     WIN = MyWindow()
+    WIN.set_name('MyWindow')
     WIN.connect("delete-event", Gtk.main_quit)
     WIN.show_all()
     Gtk.main()
