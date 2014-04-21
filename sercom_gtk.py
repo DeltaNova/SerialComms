@@ -27,7 +27,7 @@ class MyWindow(Gtk.Window):
         self.set_default_size(500, 400)
         self.textmode = 1 #Default to ASCII
 
-        self.hex_regex = re.compile(r'[a-fA-F0-9]',re.I | re.S)
+        self.hex_regex = re.compile(r'[a-fA-F0-9]', re.I | re.S)
 
         self.header()
         self.button2, self.button3, self.button4, self.button5 = self.buttons()
@@ -68,9 +68,10 @@ class MyWindow(Gtk.Window):
         }
         """
         style_provider.load_from_data(css)
-        Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),
+        style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-    def textmode(self,value):
+    def textmode(self, value):
         """
         Text Entry Mode
         0 = HEX
@@ -143,7 +144,7 @@ class MyWindow(Gtk.Window):
         print("Clear Button Clicked " + str(button))
 
 
-    def on_textview_change(self,*args):
+    def on_textview_change(self, *args):
         """
         Processes Changes in the TextEntry Box
         Scrolls the window vertically
@@ -173,7 +174,7 @@ class MyWindow(Gtk.Window):
             print(name)
             print(button.get_active())
 
-    def on_entry_change(self,entry):
+    def on_entry_change(self, entry):
         """
         Process Changes In Entry Field
         - Check for valid HEX or ASCII Chars
@@ -208,18 +209,18 @@ class MyWindow(Gtk.Window):
         ctx.remove_class('invalid')
 
         text = self.entry.get_text()
-        for t in text:
-            if bool(self.hex_regex.match(t)):
-                print( t + " is valid")
+        for txt in text:
+            if bool(self.hex_regex.match(txt)):
+                print(txt + " is valid")
             else:
-                print( t + " is invalid")
+                print(txt + " is invalid")
                 valid = 1
 
         if valid == 1:
             ctx.add_class('invalid')
 
             #TDOD - Disable Send Button
-            pass
+
 
 
 if __name__ == "__main__":
