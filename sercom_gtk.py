@@ -15,6 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+"""
+TODO:
+    - Need to limit the textbuffer. Overtime this will get very long with a
+      significant ammount of text input/output. Although the theoretical limit
+      is the available system RAM, the program should not be allowed to use too
+      much. A MB or a few thousand lines should be more than enough.
+
+"""
 from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango, Gdk, GObject
 import re
