@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from __future__ import print_function
-from gi.repository import Gtk, Gio, Pango, Gdk
+from gi.repository import Gtk, Gio, Pango, Gdk, GObject
 import re
 import serial
 
@@ -71,6 +71,13 @@ class MyWindow(Gtk.Window):
         style_provider.load_from_data(css)
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),
         style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+        sp = SerialPort('/dev/ttyUSB1',9600)
+        self.ser = sp.ser
+
+        # Auto Update
+        # self.update_terminal needs to return True else it only executes once.
+        GObject.timeout_add(100, self.update_terminal)
 
     def textmode(self, value):
         """
@@ -219,15 +226,27 @@ class MyWindow(Gtk.Window):
 
         if valid == 1:
             ctx.add_class('invalid')
-
             #TDOD - Disable Send Button
 
-class SerialPort(Port,Baud):
+    def update_terminal(self):
+        """
+        Update the textview showing terminal data
+        """
+        while self.ser.inWaiting() > 0:
+            #DEBUG - Print Serial Readline
+            print(self.ser.readline().rstrip())
+        #print("Updating")
+        # Needs to return True else GObject.timeout handler only calls once.
+        return True
+
+
+class SerialPort():
     """The Serial Communications Port"""
-    def __init__(self):
+    def __init__(self, Port, Baud=9600):
         self.port = Port
         self.baud = Baud
         self.ser = serial.Serial(self.port, self.baud)
+
 
 
 
@@ -238,4 +257,5 @@ if __name__ == "__main__":
     WIN.set_name('MyWindow')
     WIN.connect("delete-event", Gtk.main_quit)
     WIN.show_all()
+
     Gtk.main()
