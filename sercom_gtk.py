@@ -27,7 +27,6 @@ TODO:
       significant ammount of text input/output. Although the theoretical limit
       is the available system RAM, the program should not be allowed to use too
       much. A MB or a few thousand lines should be more than enough.
-
 """
 
 class MyWindow(Gtk.Window):
@@ -36,7 +35,7 @@ class MyWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Sercom_Gtk")
         self.set_border_width(0)
         self.set_default_size(600, 400)
-        self.textmode = 1 #Default to ASCII
+        self.textmode = 1 # 0 = HEX, 1 = ASCII
 
         self.hex_regex = re.compile(r'[a-fA-F0-9]', re.I | re.S)
 
@@ -88,14 +87,6 @@ class MyWindow(Gtk.Window):
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
         GObject.timeout_add(100, self.update_terminal)
-
-    def textmode(self, value):
-        """
-        Text Entry Mode
-        0 = HEX
-        1 = ASCII
-        """
-        self.textmode = value
 
     def buttons(self):
         """Create Window Buttons"""
