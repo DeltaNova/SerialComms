@@ -18,6 +18,7 @@
 from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango, Gdk
 import re
+import serial
 
 class MyWindow(Gtk.Window):
     """Application Window"""
@@ -220,6 +221,15 @@ class MyWindow(Gtk.Window):
             ctx.add_class('invalid')
 
             #TDOD - Disable Send Button
+
+class SerialPort(Port,Baud):
+    """The Serial Communications Port"""
+    def __init__(self):
+        self.port = Port
+        self.baud = Baud
+        self.ser = serial.Serial(self.port, self.baud)
+
+
 
 
 
