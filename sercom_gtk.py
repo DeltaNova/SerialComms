@@ -82,7 +82,7 @@ class MyWindow(Gtk.Window):
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),
         style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        sp = SerialPort('/dev/ttyUSB1',9600)
+        sp = SerialPort('/dev/ttyUSB1', 9600)
         self.ser = sp.ser
 
         # Auto Update
@@ -255,9 +255,9 @@ class MyWindow(Gtk.Window):
 
 class SerialPort():
     """The Serial Communications Port"""
-    def __init__(self, Port, Baud=9600):
-        self.port = Port
-        self.baud = Baud
+    def __init__(self, SerPort, SerBaud=9600):
+        self.port = SerPort
+        self.baud = SerBaud
         self.ser = serial.Serial(self.port, self.baud)
 
 
