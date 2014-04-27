@@ -25,7 +25,7 @@ class MyWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Sercom_Gtk")
         self.set_border_width(0)
-        self.set_default_size(500, 400)
+        self.set_default_size(600, 400)
         self.textmode = 1 #Default to ASCII
 
         self.hex_regex = re.compile(r'[a-fA-F0-9]', re.I | re.S)
@@ -234,7 +234,10 @@ class MyWindow(Gtk.Window):
         """
         while self.ser.inWaiting() > 0:
             #DEBUG - Print Serial Readline
-            print(self.ser.readline().rstrip())
+            data = self.ser.readline().rstrip()
+            print(data)
+            textdata = (data + '\r')
+            self.textview.get_buffer().insert_at_cursor(textdata)
         #print("Updating")
         # Needs to return True else GObject.timeout handler only calls once.
         return True
@@ -246,10 +249,6 @@ class SerialPort():
         self.port = Port
         self.baud = Baud
         self.ser = serial.Serial(self.port, self.baud)
-
-
-
-
 
 
 if __name__ == "__main__":
