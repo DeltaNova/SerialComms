@@ -15,6 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+
+from __future__ import print_function
+from gi.repository import Gtk, Gio, Pango, Gdk, GObject
+import re
+import serial
+
 """
 TODO:
     - Need to limit the textbuffer. Overtime this will get very long with a
@@ -23,10 +29,6 @@ TODO:
       much. A MB or a few thousand lines should be more than enough.
 
 """
-from __future__ import print_function
-from gi.repository import Gtk, Gio, Pango, Gdk, GObject
-import re
-import serial
 
 class MyWindow(Gtk.Window):
     """Application Window"""
