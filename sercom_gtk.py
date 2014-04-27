@@ -82,8 +82,8 @@ class MyWindow(Gtk.Window):
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),
         style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        sp = SerialPort('/dev/ttyUSB1', 9600)
-        self.ser = sp.ser
+        sport = SerialPort('/dev/ttyUSB1', 9600)
+        self.ser = sport.ser
 
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
@@ -255,9 +255,9 @@ class MyWindow(Gtk.Window):
 
 class SerialPort():
     """The Serial Communications Port"""
-    def __init__(self, SerPort, SerBaud=9600):
-        self.port = SerPort
-        self.baud = SerBaud
+    def __init__(self, port, baud=9600):
+        self.port = port
+        self.baud = baud
         self.ser = serial.Serial(self.port, self.baud)
 
 
