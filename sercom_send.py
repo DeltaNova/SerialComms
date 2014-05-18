@@ -16,15 +16,18 @@
 """
 
 import serial
-ser = serial.Serial('/dev/ttyUSB0',9600)
+SER = serial.Serial('/dev/ttyUSB0', 9600)
 
 def main():
+    """
+    Connect to a serial port and send user input ASCII Characters.
+    """
     while True:
         try:
-            x = int(raw_input("Send ASCII Character: "))
-            ser.write(chr(x))
+            char = int(raw_input("Send ASCII Character: "))
+            SER.write(chr(char))
         except ValueError, TypeError:
-            print("Oops! That was not a valid value. Try again...")
+            print "Oops! That was not a valid value. Try again..."
 
 if __name__ == "__main__":
     # Someone is launching this directly
