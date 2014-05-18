@@ -16,12 +16,15 @@
 """
 
 import serial
-ser = serial.Serial('/dev/ttyUSB0',9600)
+SER = serial.Serial('/dev/ttyUSB0', 9600)
 
 def main():
+    """
+    Listen to serial port and print incomming data.
+    """
     while True:
-        while(ser.inWaiting() > 0):
-            print(ser.readline().rstrip())
+        while SER.inWaiting() > 0:
+            print SER.readline().rstrip()
 
 if __name__ == "__main__":
     # Someone is launching this directly
