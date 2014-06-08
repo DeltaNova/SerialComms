@@ -89,8 +89,11 @@ class MyWindow(Gtk.Window):
         """
         # TODO: Tidy this up into a function with exception handling.
         default_port = self.get_ports()[0]
-        sport = SerialPort(default_port, 9600)
+        default_baud = 9600
+        sport = SerialPort(default_port, default_baud)
         self.ser = sport.ser
+        port_label.set_text(default_port)
+        baud_label.set_text(str(default_baud))
 
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
@@ -143,6 +146,8 @@ class MyWindow(Gtk.Window):
 
     def on_click_settings(self, button):
         """Access Settings Options"""
+
+
         print("Settings Button Clicked " + str(button))
 
     def on_click_send(self, button):
