@@ -20,6 +20,8 @@ from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango, Gdk, GObject
 import re
 import serial
+from serial.tools import list_ports
+import sys
 
 """
 TODO:
@@ -81,7 +83,13 @@ class MyWindow(Gtk.Window):
         Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),
         style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        sport = SerialPort('/dev/ttyUSB1', 9600)
+        """
+        Get a list of available ports and select the first one. This is to
+        prevent an Exception Error when a hardcoded USB port doesnt exist.
+        """
+        # TODO: Tidy this up into a function with exception handling.
+        default_port = self.get_ports()[0]
+        sport = SerialPort(default_port, 9600)
         self.ser = sport.ser
 
         # Auto Update
@@ -243,6 +251,23 @@ class MyWindow(Gtk.Window):
         # Needs to return True else GObject.timeout handler only calls once.
         return True
 
+    def get_ports(self):
+        """Obtain a list of the available Serial Ports"""
+        port_list_data = serial.tools.list_ports.comports()
+        port_list = []
+        for port in port_list_data:
+            """
+            port information is a list [portname, description, hardwareID]
+            If hardwareID = 'n/a' then class it as unusable.
+            """
+            if port[2] != 'n/a':
+                port_list.append(port[0])
+        if len(port_list) == 0:
+            sys.exit("No Available Serial Ports - Application Exiting")
+
+        # DEBUG - Print port_list
+        print(str(port_list))
+        return port_list
 
 class SerialPort():
     """The Serial Communications Port"""
@@ -250,6 +275,7 @@ class SerialPort():
         self.port = port
         self.baud = baud
         self.ser = serial.Serial(self.port, self.baud)
+
 
 
 if __name__ == "__main__":
