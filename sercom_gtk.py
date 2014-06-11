@@ -144,8 +144,20 @@ class MyWindow(Gtk.Window):
         textview.modify_font(fontdesc)
         return textview
 
+    def settings_menu(self):
+        menu = Gtk.Menu()
+        i1 = Gtk.MenuItem("Item 1")
+        i2 = Gtk.MenuItem("Item 2")
+        menu.append(i1)
+        menu.append(i2)
+        #menu.show_all()
+        menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
+        return menu
+
     def on_click_settings(self, button):
         """Access Settings Options"""
+        self.menu = self.settings_menu()
+        self.menu.show_all()
 
 
         print("Settings Button Clicked " + str(button))
