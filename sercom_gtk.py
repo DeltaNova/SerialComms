@@ -41,7 +41,7 @@ class MyWindow(Gtk.Window):
 
         self.hex_regex = re.compile(r'[a-fA-F0-9]', re.I | re.S)
 
-        self.header()
+        header,button,self.set_menu = self.header()
         self.button2, self.button3, self.button4, self.button5 = self.buttons()
 
         baud_label = Gtk.Label("baud")
@@ -95,6 +95,10 @@ class MyWindow(Gtk.Window):
         port_label.set_text(default_port)
         baud_label.set_text(str(default_baud))
 
+
+
+
+
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
         GObject.timeout_add(100, self.update_terminal)
@@ -120,13 +124,22 @@ class MyWindow(Gtk.Window):
         headerbar.props.title = "Sercom_Gtk"
         self.set_titlebar(headerbar)
 
-        button = Gtk.Button()
+        button = Gtk.MenuButton()
         icon = Gio.ThemedIcon(name="emblem-system-symbolic")
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
         button.add(image)
-        button.connect("clicked", self.on_click_settings)
+        #button.connect("clicked", self.on_click_settings)
+        set_menu = Gtk.Menu()
+        set_menu.append(Gtk.MenuItem("First"))
+        set_menu.append(Gtk.MenuItem("Second"))
+        set_menu.append(Gtk.MenuItem("Third"))
+        set_menu.append(Gtk.MenuItem("This is a longer string"))
+        set_menu.append(Gtk.MenuItem("This is a much much longer string of text"))
+        set_menu.popup(None, button, None, None, 0, Gtk.get_current_event_time())
+        button.connect("clicked", self.on_click_set_menu)
+        button.set_popup(set_menu)
         headerbar.pack_end(button)
-        return headerbar
+        return headerbar,button,set_menu
 
     def scroll_window(self):
         """Create ScrolledWindow"""
@@ -150,9 +163,13 @@ class MyWindow(Gtk.Window):
         i2 = Gtk.MenuItem("Item 2")
         menu.append(i1)
         menu.append(i2)
-        #menu.show_all()
         menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
         return menu
+
+    def on_click_set_menu(self, button):
+        """Access Settings Options"""
+        self.set_menu.show_all()
+
 
     def on_click_settings(self, button):
         """Access Settings Options"""
