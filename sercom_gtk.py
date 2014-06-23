@@ -95,10 +95,6 @@ class MyWindow(Gtk.Window):
         port_label.set_text(default_port)
         baud_label.set_text(str(default_baud))
 
-
-
-
-
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
         GObject.timeout_add(100, self.update_terminal)
@@ -117,6 +113,8 @@ class MyWindow(Gtk.Window):
         button5.connect("toggled", self.on_button_toggled, 5)
         return button2, button3, button4, button5
 
+
+
     def header(self):
         """Setup the header bar"""
         headerbar = Gtk.HeaderBar()
@@ -128,18 +126,72 @@ class MyWindow(Gtk.Window):
         icon = Gio.ThemedIcon(name="emblem-system-symbolic")
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
         button.add(image)
-        #button.connect("clicked", self.on_click_settings)
+
+        button.connect("clicked", self.on_click_settings_menu)
         set_menu = Gtk.Menu()
-        set_menu.append(Gtk.MenuItem("First"))
-        set_menu.append(Gtk.MenuItem("Second"))
-        set_menu.append(Gtk.MenuItem("Third"))
-        set_menu.append(Gtk.MenuItem("This is a longer string"))
-        set_menu.append(Gtk.MenuItem("This is a much much longer string of text"))
         set_menu.popup(None, button, None, None, 0, Gtk.get_current_event_time())
-        button.connect("clicked", self.on_click_set_menu)
+
+        # Get a list of the ports on the system. Use to create toggle buttons.
+        ports = self.get_ports()
+        number_ports = len(ports)
+        """
+        # Attempt 1
+        count = 0
+        while count < number_ports:
+            for port in ports:
+                print("Print port: " + port)
+                print("Print number_ports: " + str(number_ports))
+                if count == 0:
+                    btn = Gtk.RadioMenuItem.new_with_label(None, port)
+                    btn.connect("toggled", self.on_port_toggled, number_ports)
+                    set_menu.append(btn)
+                else:
+                    btn2 = Gtk.RadioMenuItem.new_with_label_from_widget(btn, port)
+                    btn2.connect("toggled", self.on_port_toggled, number_ports)
+                    set_menu.append(btn2)
+                number_ports = number_ports + 1
+        """
+        # Attempt 2
+
+        # Create a list to hold the button references
+        item_list = []
+        # Create several buttons and store them in the list
+        for number in range(0,5):
+            item = Gtk.MenuItem("Test: " + str(number))
+            item_list.append(item)
+
+        # DEBUG - Calculate and Print number of items
+        num_items = len(item_list)
+        print("Number of Items: " + str(num_items))
+
+        # Add the buttons to the existing menu
+        for the_item in item_list:
+            set_menu.append(the_item)
+
+        # Reference on the the new buttons and change the label
+        item_list[3].set_label("Something New")
+        # End Attempt 2
+
+        # Hardcoded Reference
+        i1 = Gtk.MenuItem("First")
+        i2 = Gtk.MenuItem("Second")
+        i3 = Gtk.MenuItem("Third")
+        i4 = Gtk.MenuItem("This is a longer string")
+        i5 = Gtk.MenuItem("This is a much much longer string of text")
+        set_menu.append(i1)
+        set_menu.append(i2)
+        set_menu.append(i3)
+        set_menu.append(i4)
+        set_menu.append(i5)
+
         button.set_popup(set_menu)
         headerbar.pack_end(button)
         return headerbar,button,set_menu
+
+    def on_port_toggled(self, button, name):
+        print("Port Toggled")
+
+        return
 
     def scroll_window(self):
         """Create ScrolledWindow"""
@@ -157,26 +209,10 @@ class MyWindow(Gtk.Window):
         textview.modify_font(fontdesc)
         return textview
 
-    def settings_menu(self):
-        menu = Gtk.Menu()
-        i1 = Gtk.MenuItem("Item 1")
-        i2 = Gtk.MenuItem("Item 2")
-        menu.append(i1)
-        menu.append(i2)
-        menu.popup(None, None, None, None, 0, Gtk.get_current_event_time())
-        return menu
-
-    def on_click_set_menu(self, button):
+    def on_click_settings_menu(self, button):
         """Access Settings Options"""
         self.set_menu.show_all()
-
-
-    def on_click_settings(self, button):
-        """Access Settings Options"""
-        self.menu = self.settings_menu()
-        self.menu.show_all()
-
-
+        #DEBUG - Settings Menu Button Clicked
         print("Settings Button Clicked " + str(button))
 
     def on_click_send(self, button):
