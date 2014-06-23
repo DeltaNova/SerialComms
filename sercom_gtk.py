@@ -88,7 +88,8 @@ class MyWindow(Gtk.Window):
         prevent an Exception Error when a hardcoded USB port doesnt exist.
         """
         # TODO: Tidy this up into a function with exception handling.
-        default_port = self.get_ports()[0]
+        ports = self.get_ports()
+        default_port = ports[0]
         default_baud = 9600
         sport = SerialPort(default_port, default_baud)
         self.ser = sport.ser
@@ -157,7 +158,7 @@ class MyWindow(Gtk.Window):
         # Create a list to hold the button references
         item_list = []
         # Create several buttons and store them in the list
-        for number in range(0,5):
+        for number in range(0,number_ports):
             #item = Gtk.MenuItem("Test: " + str(number))
             #item = Gtk.RadioMenuItem(label ="This is an example")
             #group = Gtk.RadioMenuItem.get_group(Gtk.RadioMenuItem(item))
@@ -165,12 +166,14 @@ class MyWindow(Gtk.Window):
             #    Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item))
 
             if (number == 0):
-                item = Gtk.RadioMenuItem(label = ("Port: " + str(number)))
+                #item = Gtk.RadioMenuItem(label = ("Port: " + str(number)))
+                item = Gtk.RadioMenuItem(label = (ports[number]))
 
             else:
                 group = item_list[0]
                 #item = Gtk.RadioMenuItem(group = group, label = "Example")
-                item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], ("Port: " + str(number)))
+                #item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], ("Port: " + str(number)))
+                item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], (ports[number]))
 
             item_list.append(item)
             #Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item_list[0]))
