@@ -153,26 +153,46 @@ class MyWindow(Gtk.Window):
         """
         # Attempt 2
 
+        group = None
         # Create a list to hold the button references
         item_list = []
         # Create several buttons and store them in the list
         for number in range(0,5):
-            item = Gtk.MenuItem("Test: " + str(number))
+            #item = Gtk.MenuItem("Test: " + str(number))
+            #item = Gtk.RadioMenuItem(label ="This is an example")
+            #group = Gtk.RadioMenuItem.get_group(Gtk.RadioMenuItem(item))
+            #if (number == 0):
+            #    Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item))
+
+            if (number == 0):
+                item = Gtk.RadioMenuItem(label = ("Port: " + str(number)))
+
+            else:
+                group = item_list[0]
+                #item = Gtk.RadioMenuItem(group = group, label = "Example")
+                item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], ("Port: " + str(number)))
+
             item_list.append(item)
+            #Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item_list[0]))
 
         # DEBUG - Calculate and Print number of items
-        num_items = len(item_list)
-        print("Number of Items: " + str(num_items))
+        #num_items = len(item_list)
+        #print("Number of Items: " + str(num_items))
 
         # Add the buttons to the existing menu
+        x = 0
         for the_item in item_list:
+            the_item.connect("toggled", self.on_port_toggled, x)
             set_menu.append(the_item)
+            x = x + 1
+        item_list[0].set_active(1)
 
         # Reference on the the new buttons and change the label
-        item_list[3].set_label("Something New")
+        #item_list[3].set_label("Something New")
         # End Attempt 2
 
         # Hardcoded Reference
+        """
         i1 = Gtk.MenuItem("First")
         i2 = Gtk.MenuItem("Second")
         i3 = Gtk.MenuItem("Third")
@@ -183,13 +203,15 @@ class MyWindow(Gtk.Window):
         set_menu.append(i3)
         set_menu.append(i4)
         set_menu.append(i5)
-
+        """
         button.set_popup(set_menu)
         headerbar.pack_end(button)
         return headerbar,button,set_menu
 
-    def on_port_toggled(self, button, name):
-        print("Port Toggled")
+    def on_port_toggled(self, button, data):
+        print("Port Toggled: " + str(data))
+        if button.get_active() == 1:
+            print("Active Button: " + str(data))
 
         return
 
