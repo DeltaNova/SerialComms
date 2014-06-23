@@ -45,7 +45,7 @@ class MyWindow(Gtk.Window):
         self.button2, self.button3, self.button4, self.button5 = self.buttons()
 
         baud_label = Gtk.Label("baud")
-        port_label = Gtk.Label("port")
+        self.port_label = Gtk.Label("port")
 
         self.entry = Gtk.Entry()
         #DEBUG - self.entry_change
@@ -55,7 +55,7 @@ class MyWindow(Gtk.Window):
         hbox.pack_start(self.button4, 0, 0, 0)
         hbox.pack_start(self.button5, 0, 0, 0)
         hbox.pack_start(baud_label, 1, 1, 0)
-        hbox.pack_start(port_label, 1, 1, 0)
+        hbox.pack_start(self.port_label, 1, 1, 0)
         hbox.pack_start(self.button3, 0, 0, 10)
         hbox.pack_start(self.button2, 0, 0, 0)
 
@@ -88,13 +88,13 @@ class MyWindow(Gtk.Window):
         prevent an Exception Error when a hardcoded USB port doesnt exist.
         """
         # TODO: Tidy this up into a function with exception handling.
-        ports = self.get_ports()
-        default_port = ports[0]
-        default_baud = 9600
-        sport = SerialPort(default_port, default_baud)
+        self.ports = self.get_ports()
+        default_port = self.ports[0]
+        self.default_baud = 9600
+        sport = SerialPort(default_port, self.default_baud)
         self.ser = sport.ser
-        port_label.set_text(default_port)
-        baud_label.set_text(str(default_baud))
+        self.port_label.set_text(default_port)
+        baud_label.set_text(str(self.default_baud))
 
         # Auto Update
         # self.update_terminal needs to return True else it only executes once.
@@ -211,10 +211,14 @@ class MyWindow(Gtk.Window):
         headerbar.pack_end(button)
         return headerbar,button,set_menu
 
-    def on_port_toggled(self, button, data):
-        print("Port Toggled: " + str(data))
+    def on_port_toggled(self, button, number):
+        print("Port Toggled: " + str(number))
         if button.get_active() == 1:
-            print("Active Button: " + str(data))
+            print("Active Button: " + str(number))
+            self.port_label.set_text(self.ports[number])
+
+            sport = SerialPort(self.ports[number], self.default_baud)
+            self.ser = sport.ser
 
         return
 
