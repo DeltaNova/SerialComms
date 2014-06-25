@@ -19,7 +19,8 @@
 from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango, Gdk, GObject
 import re
-import serial
+#TODO: Add in a check for the pyserial version.
+import serial #Requires pyserial 2.7 or higher
 from serial.tools import list_ports
 import sys
 
@@ -114,8 +115,6 @@ class MyWindow(Gtk.Window):
         button5.connect("toggled", self.on_button_toggled, 5)
         return button2, button3, button4, button5
 
-
-
     def header(self):
         """Setup the header bar"""
         headerbar = Gtk.HeaderBar()
@@ -135,48 +134,18 @@ class MyWindow(Gtk.Window):
         # Get a list of the ports on the system. Use to create toggle buttons.
         ports = self.get_ports()
         number_ports = len(ports)
-        """
-        # Attempt 1
-        count = 0
-        while count < number_ports:
-            for port in ports:
-                print("Print port: " + port)
-                print("Print number_ports: " + str(number_ports))
-                if count == 0:
-                    btn = Gtk.RadioMenuItem.new_with_label(None, port)
-                    btn.connect("toggled", self.on_port_toggled, number_ports)
-                    set_menu.append(btn)
-                else:
-                    btn2 = Gtk.RadioMenuItem.new_with_label_from_widget(btn, port)
-                    btn2.connect("toggled", self.on_port_toggled, number_ports)
-                    set_menu.append(btn2)
-                number_ports = number_ports + 1
-        """
-        # Attempt 2
 
         group = None
         # Create a list to hold the button references
         item_list = []
         # Create several buttons and store them in the list
         for number in range(0,number_ports):
-            #item = Gtk.MenuItem("Test: " + str(number))
-            #item = Gtk.RadioMenuItem(label ="This is an example")
-            #group = Gtk.RadioMenuItem.get_group(Gtk.RadioMenuItem(item))
-            #if (number == 0):
-            #    Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item))
-
             if (number == 0):
-                #item = Gtk.RadioMenuItem(label = ("Port: " + str(number)))
                 item = Gtk.RadioMenuItem(label = (ports[number]))
-
             else:
                 group = item_list[0]
-                #item = Gtk.RadioMenuItem(group = group, label = "Example")
-                #item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], ("Port: " + str(number)))
                 item = Gtk.RadioMenuItem.new_with_label_from_widget(item_list[0], (ports[number]))
-
             item_list.append(item)
-            #Gtk.CheckMenuItem.set_active(Gtk.CheckMenuItem(item_list[0]))
 
         # DEBUG - Calculate and Print number of items
         #num_items = len(item_list)
@@ -194,8 +163,9 @@ class MyWindow(Gtk.Window):
         #item_list[3].set_label("Something New")
         # End Attempt 2
 
-        # Hardcoded Reference
+        
         """
+        # Hardcoded Reference
         i1 = Gtk.MenuItem("First")
         i2 = Gtk.MenuItem("Second")
         i3 = Gtk.MenuItem("Third")
@@ -210,6 +180,13 @@ class MyWindow(Gtk.Window):
         button.set_popup(set_menu)
         headerbar.pack_end(button)
         return headerbar,button,set_menu
+
+	def baud_rate_menu(self):
+		"""
+		Creates the menu entry to select the baud rate
+		"""
+		#  Common baud rates 75, 110, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600 and 115200
+		return
 
     def on_port_toggled(self, button, number):
         print("Port Toggled: " + str(number))
@@ -374,8 +351,6 @@ class SerialPort():
         self.port = port
         self.baud = baud
         self.ser = serial.Serial(self.port, self.baud)
-
-
 
 if __name__ == "__main__":
     WIN = MyWindow()
