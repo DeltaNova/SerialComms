@@ -18,12 +18,13 @@
 
 from __future__ import print_function
 from gi.repository import Gtk, Gio, Pango, Gdk, GObject
-import re
+import re # Regular Expressions
 #TODO: Add in a check for the pyserial version.
 import serial #Requires pyserial 2.7 or higher
 from serial.tools import list_ports
 import sys
-
+import logging # Used to provide debug messages, warnings etc.
+logging.basicConfig(level=logging.DEBUG) # Production Code level=logging.WARNING
 """
 TODO:
     - Need to limit the textbuffer. Overtime this will get very long with a
@@ -246,7 +247,8 @@ class MyWindow(Gtk.Window):
         adj.set_value(adj.get_upper() - adj.get_page_size())
         #DEBUG - TextEntry Change
         #print(args)
-        print("TextView Change ")
+        #print("TextView Change ")
+        logging.info("TextView Change")
 
     def on_button_toggled(self, button, name):
         """Indicates Text Entry Type"""
@@ -255,13 +257,15 @@ class MyWindow(Gtk.Window):
                 print("ASCII Mode")
                 self.textmode = 1
                 #DEBUG - Print textmode
-                print(self.textmode)
+                #print(self.textmode)
+                logging.debug(self.textmode)
         elif name == 5:
             if button.get_active() == 1:
                 print("HEX Mode")
                 self.textmode = 0
                 #DEBUG - Print textmode
-                print(self.textmode)
+                #print(self.textmode)
+                logging.debug(self.textmode)
         else:
             print("ERROR: This mode should not be selectable")
             print(name)
@@ -281,10 +285,12 @@ class MyWindow(Gtk.Window):
             # Hex Mode
             self.validate_hex(entry)
         else:
-            print("Invalid Mode Selected")
-
+            #print("Invalid Mode Selected")
+            logging.warn("Invalid Mode Selected")
         #DEBUG - TextEntry Change
-        print("Text Entry Change")
+        #print("Text Entry Change")
+        logging.info("Text Entry Change")
+        return
 
     def validate_ascii(self):
         """
@@ -311,16 +317,15 @@ class MyWindow(Gtk.Window):
 
         if valid == 1:
             ctx.add_class('invalid')
-            #TDOD - Disable Send Button
+            #TODO: - Disable Send Button
 
     def update_terminal(self):
         """
         Update the textview showing terminal data
         """
         while self.ser.inWaiting() > 0:
-            #DEBUG - Print Serial Readline
             data = self.ser.readline().rstrip()
-            print(data)
+            logging.debug("Serial Readline: " + data)
             textdata = (data + '\r')
             self.textview.get_buffer().insert_at_cursor(textdata)
         #print("Updating")
@@ -341,8 +346,7 @@ class MyWindow(Gtk.Window):
         if len(port_list) == 0:
             sys.exit("No Available Serial Ports - Application Exiting")
 
-        # DEBUG - Print port_list
-        print(str(port_list))
+        logging.debug("Port List: " + str(port_list))
         return port_list
 
 class SerialPort():
@@ -357,5 +361,6 @@ if __name__ == "__main__":
     WIN.set_name('MyWindow')
     WIN.connect("delete-event", Gtk.main_quit)
     WIN.show_all()
+    logging.debug("DEBUG MODE")
 
     Gtk.main()
