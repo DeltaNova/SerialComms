@@ -90,10 +90,28 @@ class MyWindow(Gtk.Window):
         prevent an Exception Error when a hardcoded USB port doesnt exist.
         """
         # TODO: Tidy this up into a function with exception handling.
-        self.ports = self.get_ports()
-        default_port = self.ports[0]
+        self.ports, self.port_count = self.get_ports()
+        #default_port = self.ports[0]
         self.default_baud = 9600
-        sport = SerialPort(default_port, self.default_baud)
+        # Setup the default port
+        # If the first port fails then try the second.
+        # DEBUG: this needs to be rewritted to handle additonal ports
+        
+        try:
+            default_port = self.ports[0]
+            sport = SerialPort(self.ports[0], self.default_baud)
+        except (AttributeError,serial.SerialException):
+            print("Unable to open port")
+            print("Try another port if present")
+            if self.port_count > 1:
+                try:
+                    default_port= self.ports[1]
+                    sport = SerialPort(self.ports[1], self.default_baud)
+                except(serial.SerialException):
+                    print("Unable to open port2")
+                    sys.exit("No Available Serial Ports - Application Exiting")
+        finally:
+            print("Default Port Setup")        
         self.ser = sport.ser
         self.port_label.set_text(default_port)
         baud_label.set_text(str(self.default_baud))
@@ -133,8 +151,8 @@ class MyWindow(Gtk.Window):
         set_menu.popup(None, button, None, None, 0, Gtk.get_current_event_time())
 
         # Get a list of the ports on the system. Use to create toggle buttons.
-        ports = self.get_ports()
-        number_ports = len(ports)
+        ports , number_ports = self.get_ports()
+        #number_ports = len(ports)
 
         group = None
         # Create a list to hold the button references
@@ -158,6 +176,8 @@ class MyWindow(Gtk.Window):
             the_item.connect("toggled", self.on_port_toggled, x)
             set_menu.append(the_item)
             x = x + 1
+            #print(the_item)
+        #TODO: This is broken. It always points to the first port even if the setup for it failed.
         item_list[0].set_active(1)
 
         # Reference on the the new buttons and change the label
@@ -194,7 +214,6 @@ class MyWindow(Gtk.Window):
         if button.get_active() == 1:
             print("Active Button: " + str(number))
             self.port_label.set_text(self.ports[number])
-
             sport = SerialPort(self.ports[number], self.default_baud)
             self.ser = sport.ser
 
@@ -345,9 +364,11 @@ class MyWindow(Gtk.Window):
                 port_list.append(port[0])
         if len(port_list) == 0:
             sys.exit("No Available Serial Ports - Application Exiting")
-
+        else:
+            port_count = len(port_list)
         logging.debug("Port List: " + str(port_list))
-        return port_list
+        logging.debug("Port Count: " + str(port_count))
+        return port_list, port_count
 
 class SerialPort():
     """The Serial Communications Port"""
