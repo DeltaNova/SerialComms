@@ -184,20 +184,6 @@ class MyWindow(Gtk.Window):
         #item_list[3].set_label("Something New")
         # End Attempt 2
 
-        
-        """
-        # Hardcoded Reference
-        i1 = Gtk.MenuItem("First")
-        i2 = Gtk.MenuItem("Second")
-        i3 = Gtk.MenuItem("Third")
-        i4 = Gtk.MenuItem("This is a longer string")
-        i5 = Gtk.MenuItem("This is a much much longer string of text")
-        set_menu.append(i1)
-        set_menu.append(i2)
-        set_menu.append(i3)
-        set_menu.append(i4)
-        set_menu.append(i5)
-        """
         button.set_popup(set_menu)
         headerbar.pack_end(button)
         return headerbar,button,set_menu
@@ -206,8 +192,10 @@ class MyWindow(Gtk.Window):
 		"""
 		Creates the menu entry to select the baud rate
 		"""
-		#  Common baud rates 75, 110, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600 and 115200
-		return
+		#  Common baud rates
+        baud_rates = [75,110,300,1200,2400,4800,9600,19200,38400,57600,115200]
+        default_baud = baud_rates[6]
+        return default_baud
 
     def on_port_toggled(self, button, number):
         print("Port Toggled: " + str(number))
@@ -253,8 +241,7 @@ class MyWindow(Gtk.Window):
     def on_click_clear(self, button):
         """Clears Contents of TextEntry"""
         self.entry.set_text("")
-        #DEBUG - Clear Button Clicked
-        print("Clear Button Clicked " + str(button))
+        logging.debug("Clear Button Clicked " + str(button))
 
 
     def on_textview_change(self, *args):
@@ -275,15 +262,11 @@ class MyWindow(Gtk.Window):
             if button.get_active() == 1:
                 print("ASCII Mode")
                 self.textmode = 1
-                #DEBUG - Print textmode
-                #print(self.textmode)
                 logging.debug(self.textmode)
         elif name == 5:
             if button.get_active() == 1:
                 print("HEX Mode")
                 self.textmode = 0
-                #DEBUG - Print textmode
-                #print(self.textmode)
                 logging.debug(self.textmode)
         else:
             print("ERROR: This mode should not be selectable")
@@ -304,10 +287,7 @@ class MyWindow(Gtk.Window):
             # Hex Mode
             self.validate_hex(entry)
         else:
-            #print("Invalid Mode Selected")
             logging.warn("Invalid Mode Selected")
-        #DEBUG - TextEntry Change
-        #print("Text Entry Change")
         logging.info("Text Entry Change")
         return
 
@@ -315,13 +295,13 @@ class MyWindow(Gtk.Window):
         """
         Check to see if text is valid ASCII
         """
-        print("Validating ASCII")
+        logging.info("Validating ASCII")
 
     def validate_hex(self, entry):
         """
         Check to see if text is valid HEX
         """
-        print("Validating HEX")
+        logging.info("Validating HEX")
         valid = 0 #Set to 1 for invalid text
         ctx = entry.get_style_context()
         ctx.remove_class('invalid')
@@ -347,7 +327,6 @@ class MyWindow(Gtk.Window):
             logging.debug("Serial Readline: " + data)
             textdata = (data + '\r')
             self.textview.get_buffer().insert_at_cursor(textdata)
-        #print("Updating")
         # Needs to return True else GObject.timeout handler only calls once.
         return True
 
