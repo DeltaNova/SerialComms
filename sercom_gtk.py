@@ -31,6 +31,13 @@ TODO:
       significant ammount of text input/output. Although the theoretical limit
       is the available system RAM, the program should not be allowed to use too
       much. A MB or a few thousand lines should be more than enough.
+
+    - If a reset is performed on the serial device the program can lose the port
+      connection. The generated error:
+      "OSError: [Errno 11] Resource temporarily unavailable"
+      needs to be handled correctly. Maybe wait a few seconds and try to
+      reconnect.
+
 """
 
 class MyWindow(Gtk.Window):
@@ -96,7 +103,7 @@ class MyWindow(Gtk.Window):
         # Setup the default port
         # If the first port fails then try the second.
         # DEBUG: this needs to be rewritted to handle additonal ports
-        
+
         try:
             default_port = self.ports[0]
             sport = SerialPort(self.ports[0], self.default_baud)
@@ -111,7 +118,7 @@ class MyWindow(Gtk.Window):
                     print("Unable to open port2")
                     sys.exit("No Available Serial Ports - Application Exiting")
         finally:
-            print("Default Port Setup")        
+            print("Default Port Setup")
         self.ser = sport.ser
         self.port_label.set_text(default_port)
         baud_label.set_text(str(self.default_baud))
@@ -188,11 +195,11 @@ class MyWindow(Gtk.Window):
         headerbar.pack_end(button)
         return headerbar,button,set_menu
 
-	def baud_rate_menu(self):
-		"""
-		Creates the menu entry to select the baud rate
-		"""
-		#  Common baud rates
+    def baud_rate_menu(self):
+        """
+        Creates the menu entry to select the baud rate
+        """
+        #  Common baud rates
         baud_rates = [75,110,300,1200,2400,4800,9600,19200,38400,57600,115200]
         default_baud = baud_rates[6]
         return default_baud
@@ -235,6 +242,7 @@ class MyWindow(Gtk.Window):
         textbuffer.get_insert()
         entry_text = self.entry.get_text()
         textbuffer.insert_at_cursor(entry_text)
+        #DEBUG - Add Code to send entry_text to serial port.
         #DEBUG - Send Button Clicked
         print("Send Button Clicked " + str(button))
 
